@@ -53,8 +53,7 @@ public class NewNotification {
         final String ticker = exampleString;
         final String title = res.getString(
                 R.string.new_notification_title_template, exampleString);
-        final String text = res.getString(
-                R.string.new_notification_placeholder_text_template, exampleString);
+        final String text = " She  tried calling you  again ";
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 

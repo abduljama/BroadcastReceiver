@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
@@ -28,10 +29,20 @@ public class MainActivity extends AppCompatActivity {
     EditText phoneNo;
     SharedPreferences sharedpreferences;
 
+    TextView txtSender , txtMessage;
+
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     public static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 101;
     private static final int PERMISSION_SEND_SMS = 123;
+
+    public  static final int PERMISSIONS_MULTIPLE_REQUEST = 1;
+
+    int PERMISSION_ALL = 1;
+
+
+    String[] PERMISSIONS = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_SMS };
+
 
 
     @Override
@@ -39,8 +50,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        txtMessage = (TextView)findViewById(R.id.message);
+        txtSender = (TextView)findViewById(R.id.sender);
+
         checkPhoneStatePermission();
-        checkSMSPermissions();
+      //  checkSMSPermissions();
+
+
 
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
@@ -52,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
                 if (intent.getAction().equals("newMessageRecieved")) {
                     String orign = intent.getStringExtra("sender");
                     String message = intent.getStringExtra("message");
+                    
+                    txtSender.setText(orign);
+                    txtMessage.setText(message);
                     Toast.makeText( getApplicationContext() ," Sender " +  orign + "Message "+ message , Toast.LENGTH_LONG).show();
                 }
             }
@@ -89,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 } else {
                 }
                 return;
@@ -109,8 +127,10 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_CONTACTS)) {
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_PHONE_STATE},
-                        MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+                        new String[]{
+                                Manifest.permission.READ_PHONE_STATE ,
+                                Manifest.permission.READ_SMS},
+                        PERMISSIONS_MULTIPLE_REQUEST);
             }
         }
     }
